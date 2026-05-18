@@ -11,6 +11,7 @@ from .platform_api_call.fetch_tiktok import get_tiktok_comparison_data
 from .platform_api_call.fetch_linkedin import get_linkedin_comparison_data
 from .platform_api_call.fetch_meta import get_meta_comparison_data
 from .platform_api_call.fetch_dv360 import get_dv360_standard_comparison_data, get_dv360_youtube_comparison_data
+from .platform_api_call.fetch_snapchat import get_snapchat_comparison_data
 import csv
 import time
 MELTANO_MARKER = "meltano_"
@@ -77,6 +78,7 @@ class Comparison_source:
     def get_comparison_api(self):
         secrets = self.read_secrets()
         meta_account_id = secrets["TAP_FACEBOOK_AIRBYTE_CONFIG_ACCOUNT_ID"]
+        snapchat_ad_account_id = secrets["TAP_SNAPCHAT_ADS_AD_ACCOUNT_IDS"]
         comparison_api = {
             "meta":f"https://graph.facebook.com/v25.0/act_{meta_account_id}/insights",
             "linkedin": "https://api.linkedin.com/rest/adAnalytics",
@@ -84,12 +86,20 @@ class Comparison_source:
             "dv360_youtube": "https://doubleclickbidmanager.googleapis.com/v2/queries",
             "tiktok": "https://business-api.tiktok.com/open_api/v1.3/report/integrated/get/",
             "ttd": "https://api.thetradedesk.com/v3/myreports/reportschedule",
+            "snapchat": f"https://adsapi.snapchat.com/v1/adaccounts/{snapchat_ad_account_id}/stats?granularity=TOTAL"
         }
         return comparison_api[self.comparison_name]
     
 
     def get_tiktok_comparison_data(self):
         return get_tiktok_comparison_data(self)
+    
+    def get_snapchat_comparison_data(self):
+        secrets = self.read_secrets()
+        self.snapchat_client_id = secrets["TAP_SNAPCHAT_ADS_CLIENT_ID"]
+        self.snapchat_client_secret = secrets["TAP_SNAPCHAT_ADS_CLIENT_SECRET"]
+        self.snapchat_refresh_token = secrets["TAP_SNAPCHAT_ADS_REFRESH_TOKEN"]
+        return get_snapchat_comparison_data(self)
     
     def get_meta_comparison_data(self):
         return get_meta_comparison_data(self)
@@ -125,4 +135,4 @@ class Comparison_source:
     
     
 if __name__ == "__main__":
-    print(Comparison_source(comparison_name="facebook",dimension_filter="",comparison_start_date="2026-03-02",comparison_end_date="2026-03-26",secret_name="airflow-variables-meltano_squirrel_main",project_id="739679429225").get_ttd_comparison_data())
+    print(Comparison_source(comparison_name="snapchat",dimension_filter="",comparison_start_date="2026-05-07",comparison_end_date="2026-05-12",secret_name="airflow-variables-meltano_uowaikato_main",project_id="739679429225").get_snapchat_comparison_data())

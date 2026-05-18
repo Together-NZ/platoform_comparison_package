@@ -40,7 +40,6 @@ class ComparisonTrigger:
             return True
         
 if __name__ == "__main__":
-    comparison_trigger = ComparisonTrigger(project_name="kiwibank-main",destination_table="dv360_transformed",table_name="dv360_youtube",source_name="dv360_youtube",start_date="2026-04-10",end_date="2026-05-15",secret_name="airflow-variables-meltano_kiwibank_main",project_id="739679429225")
+    comparison_trigger = ComparisonTrigger(project_name="uowaikato-main",destination_table="snapchat_transformed",table_name="snapchat",source_name="snapchat",start_date="2026-05-03",end_date="2026-05-11",secret_name="airflow-variables-meltano_uowaikato_main",project_id="739679429225")
     print(comparison_trigger.compare_data())
     
-        
